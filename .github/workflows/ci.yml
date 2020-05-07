@@ -1,0 +1,46 @@
+name: Containers
+
+on:
+  push:
+    paths-ignore:
+      - README.md
+
+  pull-request:
+    paths-ignore:
+      - README.md
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        maven-args:
+          - ARGS='--activate-profiles all,travis,examples --projects !querydsl-scala'
+          - ARGS='--activate-profiles jpa,hibernate5,travis,examples --projects !querydsl-jpa-codegen'
+          - ARGS='--activate-profiles all,travis --projects querydsl-scala --resume-from querydsl-scala'
+
+    runs-on: ubuntu-latest
+    container: openjdk:8-jdk-buster
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: start databases
+        run: docker-compose --file travis/docker-compose.yml up --detach mysql postgresql mongo
+
+      - uses: actions/cache@v1
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+
+      - name: test
+        run: mvn --batch-mode verify -am jacoco:report ${ARGS}
+
+      - name: report coverage
+        run: mvn coveralls:report
+
+      - name: deploy snapshot
+        if: ${{ github.event_name == 'push' && github.ref == 'master' }}
+        env:
+          NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
+          NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
+        run: mvn deploy --settings deploy/.m2/settings.xml -DskipTests
