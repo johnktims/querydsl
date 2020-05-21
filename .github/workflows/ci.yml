@@ -34,11 +34,11 @@ jobs:
           path: ~/.m2/repository
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
 
-      - name: build
+      - name: Build
         run: mvn --threads=1C --batch-mode clean install -DskipTests
 
-      - name: tar workspace
-        run: tar -czf workspace.tar.gz --exclude=workspace.tar.gz .
+      - name: Compress workspace
+        run: tar --exclude=workspace.tar.gz -czf workspace.tar.gz .
 
       - uses: actions/upload-artifact@v2
         with:
@@ -140,7 +140,7 @@ jobs:
         with:
           name: workspace
 
-      - name: Unpack workspace
+      - name: Decompress workspace
         run: tar zxf ../workspace.tar.gz
 
       - name: Set up JDK 1.8
