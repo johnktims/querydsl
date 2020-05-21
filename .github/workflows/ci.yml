@@ -45,14 +45,13 @@ jobs:
   test:
     strategy:
       matrix:
-        target:
-          target: [unit-test]
+        target: [unit-test]
 #          target: [unit-test, integration tests, db2, derby, h2, hsqldb, sqlite, mysql, postgresql, mongodb, firebird,
 #                   cubrid, teradata, sqlserver, oracle, hibernate5, benchmark, performance, slow-tests, reporting]
-          include:
-            - target: unit-test
-              containers: null
-              maven-args: test
+        include:
+          - target: unit-test
+            containers: null
+            maven-args: test
 
 #            - target: db2
 #              containers: db2
