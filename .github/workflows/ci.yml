@@ -35,7 +35,7 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
 
       - name: build
-        run: mvn clean install -DskipTests
+        run: mvn --batch-mode clean install -DskipTests
 
       - uses: actions/upload-artifact@v2
         with:
@@ -43,6 +43,7 @@ jobs:
           path: .
 
   test:
+    needs: build
     strategy:
       matrix:
         target: [unit-test]
