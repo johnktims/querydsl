@@ -38,9 +38,9 @@ jobs:
         run: mvn clean install -DskipTests
 
       - uses: actions/upload-artifact@v2
-          with:
-            name: workspace
-            path: .
+        with:
+          name: workspace
+          path: .
 
   test:
     strategy:
