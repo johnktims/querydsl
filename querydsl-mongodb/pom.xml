@@ -124,30 +124,30 @@
         </executions>
       </plugin>
 
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>verification</id>
-            <goals>
-              <goal>test</goal>
-            </goals>
-            <phase>verify</phase>
-            <configuration>
-              <systemProperties>
-                <property>
-                  <name>version</name>
-                  <value>${project.version}</value>
-                </property>
-              </systemProperties>
-              <includes>
-                <include>com/querydsl/jpa/PackageVerification.java</include>
-              </includes>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
+<!--      <plugin>-->
+<!--        <groupId>org.apache.maven.plugins</groupId>-->
+<!--        <artifactId>maven-surefire-plugin</artifactId>-->
+<!--        <executions>-->
+<!--          <execution>-->
+<!--            <id>verification</id>-->
+<!--            <goals>-->
+<!--              <goal>test</goal>-->
+<!--            </goals>-->
+<!--            <phase>verify</phase>-->
+<!--            <configuration>-->
+<!--              <systemProperties>-->
+<!--                <property>-->
+<!--                  <name>version</name>-->
+<!--                  <value>${project.version}</value>-->
+<!--                </property>-->
+<!--              </systemProperties>-->
+<!--              <includes>-->
+<!--                <include>com/querydsl/jpa/PackageVerification.java</include>-->
+<!--              </includes>-->
+<!--            </configuration>-->
+<!--          </execution>-->
+<!--        </executions>-->
+<!--      </plugin>-->
 
     </plugins>
   </build>
