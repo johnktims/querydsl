@@ -128,11 +128,10 @@ jobs:
 
     runs-on: ubuntu-latest
     steps:
-      steps:
-        - name: Download workspace
-          uses: actions/download-artifact@v1
-          with:
-            name: workspace
+      - name: Download workspace
+        uses: actions/download-artifact@v1
+        with:
+          name: workspace
 
       - name: Set up JDK 1.8
         uses: actions/setup-java@v1
