@@ -35,12 +35,16 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
 
       - name: build
-        run: mvn --batch-mode clean install -DskipTests
+        run: mvn --threads=1C --batch-mode clean install -DskipTests
 
       - uses: actions/upload-artifact@v2
         with:
           name: workspace
           path: .
+
+      - name: Clean up before caching
+        run: rm -rf ~/.m2/repository/com/querydsl/
+
 
   test:
     needs: build
@@ -52,7 +56,7 @@ jobs:
         include:
           - target: unit-test
             containers: null
-            maven-args: test
+            maven-args: --threads=1C test
 
 #            - target: db2
 #              containers: db2
