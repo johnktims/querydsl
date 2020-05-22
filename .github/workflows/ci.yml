@@ -21,7 +21,7 @@ jobs:
     strategy:
       matrix:
         maven-args:
-          - --activate-profiles all,travis,examples --projects !querydsl-scala
+          - --activate-profiles all,travis,examples --projects !querydsl-scala -DincludedGroups=com.querydsl.core.testutil.H2
           - --activate-profiles jpa,hibernate5,travis,examples --projects !querydsl-jpa-codegen
           - --activate-profiles all,travis --projects querydsl-scala --resume-from querydsl-scala
 
