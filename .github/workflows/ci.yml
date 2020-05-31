@@ -49,6 +49,7 @@ jobs:
         run: rm -rf ~/.m2/repository/com/querydsl/
 
   test:
+    needs: build
     strategy:
       matrix:
         target: [test]
@@ -79,6 +80,7 @@ jobs:
         run: mvn --batch-mode install -am jacoco:report ${{ matrix.maven-args }}
 
   deploy:
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - name: Report coverage
