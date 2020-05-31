@@ -57,6 +57,9 @@ jobs:
           - target: test
             containers: db2 mysql postgresql mongo sqlserver oracle cubrid firebird
             maven-args: --activate-profiles all,travis,examples
+          - target: test-mongo
+            containers: mongo
+            maven-args: --activate-profiles mongo --projects !querydsl-scala
 
     runs-on: ubuntu-latest
     steps:
@@ -73,6 +76,7 @@ jobs:
         run: |
           cd travis/ &&\
           docker-compose up --detach ${{ matrix.containers }} &&\
+          docker ps &&\
           time docker-compose up block-until-healthy &&\
           docker ps
 
