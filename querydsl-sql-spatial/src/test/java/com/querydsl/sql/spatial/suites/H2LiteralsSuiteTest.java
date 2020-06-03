@@ -12,6 +12,7 @@ import com.querydsl.sql.suites.AbstractSuite;
 @Category(H2.class)
 public class H2LiteralsSuiteTest extends AbstractSuite {
 
+    @Category(H2.class)
     public static class Spatial extends SpatialBase { }
 
     @BeforeClass

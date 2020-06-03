@@ -10,11 +10,17 @@ import com.querydsl.jpa.*;
 @Category(Oracle.class)
 public class OracleSuiteTest extends AbstractSuite {
 
+    @Category(Oracle.class)
     public static class JPA extends JPABase { }
+    @Category(Oracle.class)
     public static class JPASQL extends JPASQLBase { }
+    @Category(Oracle.class)
     public static class JPAIntegration extends JPAIntegrationBase { }
+    @Category(Oracle.class)
     public static class Serialization extends SerializationBase { }
+    @Category(Oracle.class)
     public static class Hibernate extends HibernateBase { }
+    @Category(Oracle.class)
     public static class HibernateSQL extends HibernateSQLBase { }
 
     @BeforeClass

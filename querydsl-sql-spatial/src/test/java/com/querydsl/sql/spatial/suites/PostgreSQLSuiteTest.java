@@ -12,6 +12,7 @@ import com.querydsl.sql.suites.AbstractSuite;
 @Category(PostgreSQL.class)
 public class PostgreSQLSuiteTest extends AbstractSuite {
 
+    @Category(PostgreSQL.class)
     public static class Spatial extends SpatialBase { }
 
     @BeforeClass

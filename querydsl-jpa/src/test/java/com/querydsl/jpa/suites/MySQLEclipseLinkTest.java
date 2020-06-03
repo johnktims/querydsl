@@ -10,6 +10,7 @@ import com.querydsl.jpa.*;
 @Category(MySQL.class)
 public class MySQLEclipseLinkTest extends AbstractJPASuite {
 
+    @Category(MySQL.class)
     public static class JPA extends JPABase {
         @Override
         public void cast() {
@@ -45,8 +46,11 @@ public class MySQLEclipseLinkTest extends AbstractJPASuite {
         }
     }
 
+    @Category(MySQL.class)
     public static class JPASQL extends JPASQLBase { }
+    @Category(MySQL.class)
     public static class JPAIntegration extends JPAIntegrationBase { }
+    @Category(MySQL.class)
     public static class Serialization extends SerializationBase { }
 
     @BeforeClass

@@ -12,6 +12,7 @@ import com.querydsl.sql.suites.AbstractSuite;
 @Category(SQLServer.class)
 public class MSSQLLiteralsSuiteTest extends AbstractSuite {
 
+    @Category(SQLServer.class)
     public static class Spatial extends SpatialBase { }
 
     @BeforeClass

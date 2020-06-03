@@ -10,11 +10,17 @@ import com.querydsl.jpa.*;
 @Category(Teradata.class)
 public class TeradataSuiteTest extends AbstractSuite {
 
+    @Category(Teradata.class)
     public static class JPA extends JPABase { }
+    @Category(Teradata.class)
     public static class JPASQL extends JPASQLBase { }
+    @Category(Teradata.class)
     public static class JPAIntegration extends JPAIntegrationBase { }
+    @Category(Teradata.class)
     public static class Serialization extends SerializationBase { }
+    @Category(Teradata.class)
     public static class Hibernate extends HibernateBase { }
+    @Category(Teradata.class)
     public static class HibernateSQL extends HibernateSQLBase { }
 
     @BeforeClass

@@ -10,11 +10,17 @@ import com.querydsl.jpa.*;
 @Category(HSQLDB.class)
 public class HSQLDBSuiteTest extends AbstractSuite {
 
+    @Category(HSQLDB.class)
     public static class JPA extends JPABase { }
+    @Category(HSQLDB.class)
     public static class JPASQL extends JPASQLBase { }
+    @Category(HSQLDB.class)
     public static class JPAIntegration extends JPAIntegrationBase { }
+    @Category(HSQLDB.class)
     public static class Serialization extends SerializationBase { }
+    @Category(HSQLDB.class)
     public static class Hibernate extends HibernateBase { }
+    @Category(HSQLDB.class)
     public static class HibernateSQL extends HibernateSQLBase { }
 
     @BeforeClass

@@ -10,11 +10,17 @@ import com.querydsl.jpa.*;
 @Category(Derby.class)
 public class DerbySuiteTest extends AbstractSuite {
 
+    @Category(Derby.class)
     public static class JPA extends JPABase { }
+    @Category(Derby.class)
     public static class JPASQL extends JPASQLBase { }
+    @Category(Derby.class)
     public static class JPAIntegration extends JPAIntegrationBase { }
+    @Category(Derby.class)
     public static class Serialization extends SerializationBase { }
+    @Category(Derby.class)
     public static class Hibernate extends HibernateBase { }
+    @Category(Derby.class)
     public static class HibernateSQL extends HibernateSQLBase { }
 
     @BeforeClass
