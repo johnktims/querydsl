@@ -21,6 +21,11 @@ services:
       - MYSQL_ROOT_PASSWORD=querydsl
       - MYSQL_USER=querydsl
       - MYSQL_PASSWORD=querydsl
+    healthcheck:
+      test: mysql -h 127.0.0.1 -u $$MYSQL_USER --password=$$MYSQL_PASSWORD --database=querydsl --execute "SELECT 1"
+      interval: 5s
+      timeout: 30s
+      start_period: 30s
 
   postgresql:
     image: mdillon/postgis:9.3-alpine
@@ -32,6 +37,11 @@ services:
       - POSTGRES_USER=querydsl
       - POSTGRES_PASSWORD=querydsl
       - POSTGRES_DB=querydsl
+    healthcheck:
+      test: psql --username=$$POSTGRES_USER --dbname=$$POSTGRES_DB --command="SELECT 1"
+      interval: 5s
+      timeout: 30s
+      start_period: 30s
 
   oracle:
     image: wnameless/oracle-xe-11g-r2:latest
@@ -39,6 +49,11 @@ services:
       - "1521:1521"
     volumes:
     - "../devops/sql-snippets/oracle.sql:/docker-entrypoint-initdb.d/oracle.sql"
+    healthcheck:
+      test: echo exit | ORACLE_SID=XE ORACLE_HOME=/u01/app/oracle/product/11.2.0/xe /u01/app/oracle/product/11.2.0/xe/bin/sqlplus -L querydsl/querydsl || exit 1
+      interval: 5s
+      timeout: 30s
+      start_period: 30s
 
   cubrid:
     image: lighthopper/cubrid:9.2.26.0004
@@ -59,6 +74,11 @@ services:
     image: mongo:3.6.1
     ports:
       - "27017:27017"
+    healthcheck:
+      test: echo 'db.stats().ok' | mongo --quiet
+      interval: 5s
+      timeout: 30s
+      start_period: 30s
 
   db2:
     image: ibmcom/db2:11.5.0.0
@@ -90,7 +110,6 @@ services:
       test: /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "$$SA_PASSWORD" -Q "SELECT 1" || exit 1
       interval: 5s
       timeout: 60s
-      start_period: 60s
 
   firebird:
     image: jacobalberty/firebird:2.5.9-ss
@@ -101,3 +120,8 @@ services:
       - FIREBIRD_DATABASE=querydsl.fdb
       - FIREBIRD_USER=querydsl
       - FIREBIRD_PASSWORD=querydsl
+    healthcheck:
+      test: echo 'SHOW DATABASE; QUIT;' | /usr/local/firebird/bin/isql -user querydsl -password querydsl /firebird/data/querydsl.fdb
+      interval: 5s
+      timeout: 30s
+      start_period: 30s
