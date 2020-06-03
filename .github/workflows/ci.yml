@@ -52,14 +52,43 @@ jobs:
     needs: build
     strategy:
       matrix:
-        target: [mongo]
+        target: [unit-tests, CUBRID, DB2, Derby, Firebird, MongoDB, MySQL, Oracle, PostgreSQL, SQLServer]
         include:
-#          - target: test
-#            containers: db2 mysql postgresql sqlserver oracle cubrid firebird
-#            maven-args: --activate-profiles all,travis,examples
-          - target: mongo
-            containers: mongo
-            maven-args: -DincludedGroups=com.querydsl.core.testutil.MongoDB
+          - target: unit-tests
+            container: null
+            maven-args: --activate-profiles all,travis,examples -DexcludedGroups=com.querydsl.core.testutil.ExternalDatabase
+
+          - target: CUBRID
+            container: cubrid
+            maven-args: --activate-profiles sql,jpa,travis -DincludedGroups=com.querydsl.core.testutil.CUBRID
+
+          - target: DB2
+            container: db2
+            maven-args: --activate-profiles sql,jpa,travis -DincludedGroups=com.querydsl.core.testutil.DB2
+
+          - target: Firebird
+            container: firebird
+            maven-args: --activate-profiles sql,jpa,travis -DincludedGroups=com.querydsl.core.testutil.Firebird
+
+          - target: MongoDB
+            container: mongo
+            maven-args: --activate-profiles sql,jpa,travis -DincludedGroups=com.querydsl.core.testutil.MongoDB
+
+          - target: MySQL
+            container: mysql
+            maven-args: --activate-profiles sql,jpa,travis -DincludedGroups=com.querydsl.core.testutil.MySQL
+
+          - target: Oracle
+            container: oracle
+            maven-args: --activate-profiles sql,jpa,travis -DincludedGroups=com.querydsl.core.testutil.Oracle
+
+          - target: PostgreSQL
+            container: postges
+            maven-args: --activate-profiles sql,jpa,travis -DincludedGroups=com.querydsl.core.testutil.PostgreSQL
+
+          - target: SQLServer
+            container: sqlserver
+            maven-args: --activate-profiles sql,jpa,travis -DincludedGroups=com.querydsl.core.testutil.SQLServer
 
     runs-on: ubuntu-latest
     steps:
@@ -72,13 +101,23 @@ jobs:
         run: tar zxf workspace/workspace.tar.gz -C .
 
       - name: Start test databases
-        if: ${{ matrix.containers }}
+        if: ${{ matrix.container }}
+        shell: bash
+        working-directory: travis
         run: |
-          cd travis/ &&\
-          docker-compose up --detach ${{ matrix.containers }} &&\
-          docker ps &&\
-          time docker-compose up block-until-healthy &&\
+          docker-compose up --detach ${{ matrix.container }}
           docker ps
+
+          MAX_ATTEMPTS=$((60 * 5))
+          ATTEMPT=0
+          while [[ "${ATTEMPT}" -lt "${MAX_ATTEMPTS}" ]]; do
+             status=$(docker inspect --format='{{json .State.Health.Status}}' "$(docker ps -aqf "name=${{ matrix.container }}")")
+             if [[ $status == '"healthy"' ]]; then
+               break
+             fi
+             sleep 1
+             ATTEMPT=$((ATTEMPT + 1))
+          done
 
       - name: Run tests
         run: mvn --batch-mode verify -am jacoco:report ${{ matrix.maven-args }}
