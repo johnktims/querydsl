@@ -1,13 +1,14 @@
 package com.querydsl.core.support;
 
-import org.junit.Ignore;
+import com.querydsl.core.testutil.Performance;
 import org.junit.Test;
 
 import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.PathMetadataFactory;
 import com.querydsl.core.types.dsl.EntityPathBase;
+import org.junit.experimental.categories.Category;
 
-@Ignore
+@Category(Performance.class)
 public class QueryMixinPerformanceTest {
 
     public static final int iterations = 2000000;

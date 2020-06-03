@@ -52,14 +52,14 @@ jobs:
     needs: build
     strategy:
       matrix:
-        target: [test]
+        target: [mongo]
         include:
-          - target: test
-            containers: db2 mysql postgresql mongo sqlserver oracle cubrid firebird
-            maven-args: --activate-profiles all,travis,examples
-          - target: test-mongo
+#          - target: test
+#            containers: db2 mysql postgresql sqlserver oracle cubrid firebird
+#            maven-args: --activate-profiles all,travis,examples
+          - target: mongo
             containers: mongo
-            maven-args: --activate-profiles mongo --projects !querydsl-scala
+            maven-args: -DincludedGroups=com.querydsl.core.testutil.MongoDB
 
     runs-on: ubuntu-latest
     steps:
@@ -81,18 +81,18 @@ jobs:
           docker ps
 
       - name: Run tests
-        run: mvn --batch-mode install -am jacoco:report ${{ matrix.maven-args }}
+        run: mvn --batch-mode verify -am jacoco:report ${{ matrix.maven-args }}
+
+      - name: Report coverage
+          if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+          env:
+            COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+          run: mvn --batch-mode coveralls:report
 
   deploy:
     needs: test
     runs-on: ubuntu-latest
     steps:
-      - name: Report coverage
-        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
-        env:
-          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
-        run: mvn --batch-mode coveralls:report
-
       - name: Deploy snapshot 🚀
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
         env:
