@@ -84,10 +84,10 @@ jobs:
         run: mvn --batch-mode verify -am jacoco:report ${{ matrix.maven-args }}
 
       - name: Report coverage
-          if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
-          env:
-            COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
-          run: mvn --batch-mode coveralls:report
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+        env:
+          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+        run: mvn --batch-mode coveralls:report
 
   deploy:
     needs: test
