@@ -83,7 +83,7 @@ jobs:
             maven-args: --activate-profiles sql,jpa,travis -DincludedGroups=com.querydsl.core.testutil.Oracle
 
           - target: PostgreSQL
-            container: postgres
+            container: postgresql
             maven-args: --activate-profiles sql,jpa,travis -DincludedGroups=com.querydsl.core.testutil.PostgreSQL
 
           - target: SQLServer
