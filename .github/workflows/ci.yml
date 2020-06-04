@@ -40,10 +40,18 @@ jobs:
       - name: Compress workspace
         run: tar -czf /tmp/workspace.tar.gz .
 
+      - name: Compress artifacts
+        run: tar czvf /tmp/artifacts.tar.gz -C ~/.m2/repository/com querydsl/
+
       - uses: actions/upload-artifact@v2
         with:
           name: workspace
           path: /tmp/workspace.tar.gz
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: artifacts
+          path: /tmp/artifacts.tar.gz
 
       - name: Clean up before caching
         run: rm -rf ~/.m2/repository/com/querydsl/
@@ -132,9 +140,17 @@ jobs:
   deploy:
     needs: test
     runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
     steps:
+      - name: Download workspace
+        uses: actions/download-artifact@v1
+        with:
+          name: artifacts
+
+      - name: Decompress workspace
+        run: tar zxf artifacts/artifacts.tar.gz -C ~/.m2/repository/com
+
       - name: Deploy snapshot 🚀
-        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
         env:
           NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
           NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
