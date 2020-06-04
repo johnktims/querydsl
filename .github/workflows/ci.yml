@@ -71,8 +71,8 @@ jobs:
             maven-args: --activate-profiles sql,jpa,travis -DincludedGroups=com.querydsl.core.testutil.Firebird
 
           - target: MongoDB
-            container: mongo
-            maven-args: --activate-profiles sql,jpa,travis -DincludedGroups=com.querydsl.core.testutil.MongoDB
+            container: mongodb
+            maven-args: --activate-profiles mongodb,travis -DincludedGroups=com.querydsl.core.testutil.MongoDB
 
           - target: MySQL
             container: mysql
