@@ -52,11 +52,15 @@ jobs:
     needs: build
     strategy:
       matrix:
-        target: [unit-tests, CUBRID, DB2, Derby, Firebird, MongoDB, MySQL, Oracle, PostgreSQL, SQLServer]
+        target: [unit-tests, embedded, CUBRID, DB2, Derby, Firebird, MongoDB, MySQL, Oracle, PostgreSQL, SQLServer]
         include:
           - target: unit-tests
             container: null
-            maven-args: --activate-profiles all,travis,examples -DexcludedGroups=com.querydsl.core.testutil.ExternalDatabase
+            maven-args: --activate-profiles all,travis,examples -DexcludedGroups=com.querydsl.core.testutil.Database
+
+          - target: embedded
+            container: null
+            maven-args: --activate-profiles sql,jpa,travis -DincludedGroups=com.querydsl.core.testutil.EmbeddedDatabase
 
           - target: CUBRID
             container: cubrid
