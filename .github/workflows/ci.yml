@@ -104,19 +104,16 @@ jobs:
         if: ${{ matrix.container }}
         shell: bash
         working-directory: travis
+        timeout-minutes: 5
         run: |
           docker-compose up --detach ${{ matrix.container }}
           docker ps
-
-          MAX_ATTEMPTS=$((60 * 5))
-          ATTEMPT=0
-          while [[ "${ATTEMPT}" -lt "${MAX_ATTEMPTS}" ]]; do
+          while true; do
              status=$(docker inspect --format='{{json .State.Health.Status}}' "$(docker ps -aqf "name=${{ matrix.container }}")")
              if [[ $status == '"healthy"' ]]; then
                break
              fi
              sleep 1
-             ATTEMPT=$((ATTEMPT + 1))
           done
 
       - name: Run tests
