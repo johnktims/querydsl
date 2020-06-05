@@ -148,7 +148,9 @@ jobs:
           name: artifacts
 
       - name: Decompress workspace
-        run: tar zxf artifacts/artifacts.tar.gz -C ~/.m2/repository/com
+        run: |
+          mkdir -p ~/.m2/repository/com
+          tar zxf artifacts/artifacts.tar.gz -C ~/.m2/repository/com
 
       - name: Deploy snapshot 🚀
         env:
