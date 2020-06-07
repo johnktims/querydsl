@@ -43,20 +43,17 @@ jobs:
       - name: Compress artifacts
         run: tar czvf /tmp/artifacts.tar.gz -C ~/.m2/repository/com querydsl/
 
-      - uses: actions/upload-artifact@v2
+      - name: Upload workspace
+        uses: actions/upload-artifact@v2
         with:
           name: workspace
           path: /tmp/workspace.tar.gz
 
-      - uses: actions/upload-artifact@v2
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
         with:
           name: artifacts
           path: /tmp/artifacts.tar.gz
-
-      - uses: actions/upload-artifact@v2
-        with:
-          name: maven-settings
-          path: deploy/.m2/settings.xml
 
       - name: Clean up before caching
         run: rm -rf ~/.m2/repository/com/querydsl/
@@ -150,25 +147,23 @@ jobs:
       - name: Download workspace
         uses: actions/download-artifact@v1
         with:
-          name: artifacts
+          name: workspace
 
       - name: Decompress workspace
-        run: |
-          mkdir -p ~/.m2/repository/com
-          tar zxf artifacts/artifacts.tar.gz -C ~/.m2/repository/com
+        run: tar zxf workspace/workspace.tar.gz -C .
 
       - name: Download artifacts
         uses: actions/download-artifact@v1
         with:
           name: artifacts
 
-      - name: Download maven-settings
-        uses: actions/download-artifact@v1
-        with:
-          name: maven-settings
-          
+      - name: Decompress artifacts
+        run: |
+          mkdir -p ~/.m2/repository/com
+          tar zxf artifacts/artifacts.tar.gz -C ~/.m2/repository/com
+
       - name: Deploy snapshot 🚀
         env:
           NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
           NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
-        run: mvn --batch-mode deploy --settings maven-settings/settings.xml -DskipTests -DretryFailedDeploymentCount=3
+        run: mvn --batch-mode deploy --settings deploy/.m2/settings.xml -DskipTests -DretryFailedDeploymentCount=3
