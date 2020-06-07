@@ -132,7 +132,7 @@ jobs:
         run: mvn --batch-mode coveralls:report
 
   deploy:
-    needs: build
+    needs: test
     runs-on: ubuntu-latest
     if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/parameterize-build' }}
     steps:
