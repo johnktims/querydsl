@@ -171,4 +171,4 @@ jobs:
         env:
           NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
           NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
-        run: mvn --batch-mode deploy --settings maven-settings/deploy/.m2/settings.xml -DskipTests -DretryFailedDeploymentCount=3
+        run: mvn --batch-mode deploy --settings maven-settings/settings.xml -DskipTests -DretryFailedDeploymentCount=3
