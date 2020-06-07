@@ -163,9 +163,9 @@ jobs:
           name: artifacts
 
       - name: Download maven-settings
-          uses: actions/download-artifact@v1
-          with:
-            name: maven-settings
+        uses: actions/download-artifact@v1
+        with:
+          name: maven-settings
           
       - name: Deploy snapshot 🚀
         env:
