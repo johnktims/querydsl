@@ -53,89 +53,94 @@ jobs:
           name: artifacts
           path: /tmp/artifacts.tar.gz
 
+      - uses: actions/upload-artifact@v2
+        with:
+          name: maven-settings
+          path: deploy/.m2/settings.xml
+
       - name: Clean up before caching
         run: rm -rf ~/.m2/repository/com/querydsl/
 
-  test:
-    needs: build
-    strategy:
-      matrix:
-        target: [unit-tests, embedded, CUBRID, DB2, Derby, Firebird, MongoDB, MySQL, Oracle, PostgreSQL, SQLServer]
-        include:
-          - target: unit-tests
-            container: null
-            maven-args: --activate-profiles all,travis,examples -DexcludedGroups=com.querydsl.core.testutil.Database
-
-          - target: embedded
-            container: null
-            maven-args: --activate-profiles sql,jpa,travis -DincludedGroups=com.querydsl.core.testutil.EmbeddedDatabase
-
-          - target: CUBRID
-            container: cubrid
-            maven-args: --activate-profiles sql,jpa,travis -DincludedGroups=com.querydsl.core.testutil.CUBRID
-
-          - target: DB2
-            container: db2
-            maven-args: --activate-profiles sql,jpa,travis -DincludedGroups=com.querydsl.core.testutil.DB2
-
-          - target: Firebird
-            container: firebird
-            maven-args: --activate-profiles sql,jpa,travis -DincludedGroups=com.querydsl.core.testutil.Firebird
-
-          - target: MongoDB
-            container: mongodb
-            maven-args: --activate-profiles mongodb,travis -DincludedGroups=com.querydsl.core.testutil.MongoDB
-
-          - target: MySQL
-            container: mysql
-            maven-args: --activate-profiles sql,jpa,travis -DincludedGroups=com.querydsl.core.testutil.MySQL
-
-          - target: Oracle
-            container: oracle
-            maven-args: --activate-profiles sql,jpa,travis -DincludedGroups=com.querydsl.core.testutil.Oracle
-
-          - target: PostgreSQL
-            container: postgresql
-            maven-args: --activate-profiles sql,jpa,travis -DincludedGroups=com.querydsl.core.testutil.PostgreSQL
-
-          - target: SQLServer
-            container: sqlserver
-            maven-args: --activate-profiles sql,jpa,travis -DincludedGroups=com.querydsl.core.testutil.SQLServer
-
-    runs-on: ubuntu-latest
-    steps:
-      - name: Download workspace
-        uses: actions/download-artifact@v1
-        with:
-          name: workspace
-
-      - name: Decompress workspace
-        run: tar zxf workspace/workspace.tar.gz -C .
-
-      - name: Start test databases
-        if: ${{ matrix.container }}
-        shell: bash
-        working-directory: travis
-        timeout-minutes: 5
-        run: |
-          docker-compose up --detach ${{ matrix.container }}
-          docker ps
-          while true; do
-             status=$(docker inspect --format='{{json .State.Health.Status}}' "$(docker ps -aqf "name=${{ matrix.container }}")")
-             if [[ $status == '"healthy"' ]]; then
-               break
-             fi
-             sleep 1
-          done
-
-      - name: Run tests
-        run: mvn --batch-mode verify -am jacoco:report ${{ matrix.maven-args }}
-
-      - name: Report coverage
-        if: ${{ github.event_name == 'push' && github.ref == 'parameterize-build' }}
-        env:
-          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
-        run: mvn --batch-mode coveralls:report
+#  test:
+#    needs: build
+#    strategy:
+#      matrix:
+#        target: [unit-tests, embedded, CUBRID, DB2, Derby, Firebird, MongoDB, MySQL, Oracle, PostgreSQL, SQLServer]
+#        include:
+#          - target: unit-tests
+#            container: null
+#            maven-args: --activate-profiles all,travis,examples -DexcludedGroups=com.querydsl.core.testutil.Database
+#
+#          - target: embedded
+#            container: null
+#            maven-args: --activate-profiles sql,jpa,travis -DincludedGroups=com.querydsl.core.testutil.EmbeddedDatabase
+#
+#          - target: CUBRID
+#            container: cubrid
+#            maven-args: --activate-profiles sql,jpa,travis -DincludedGroups=com.querydsl.core.testutil.CUBRID
+#
+#          - target: DB2
+#            container: db2
+#            maven-args: --activate-profiles sql,jpa,travis -DincludedGroups=com.querydsl.core.testutil.DB2
+#
+#          - target: Firebird
+#            container: firebird
+#            maven-args: --activate-profiles sql,jpa,travis -DincludedGroups=com.querydsl.core.testutil.Firebird
+#
+#          - target: MongoDB
+#            container: mongodb
+#            maven-args: --activate-profiles mongodb,travis -DincludedGroups=com.querydsl.core.testutil.MongoDB
+#
+#          - target: MySQL
+#            container: mysql
+#            maven-args: --activate-profiles sql,jpa,travis -DincludedGroups=com.querydsl.core.testutil.MySQL
+#
+#          - target: Oracle
+#            container: oracle
+#            maven-args: --activate-profiles sql,jpa,travis -DincludedGroups=com.querydsl.core.testutil.Oracle
+#
+#          - target: PostgreSQL
+#            container: postgresql
+#            maven-args: --activate-profiles sql,jpa,travis -DincludedGroups=com.querydsl.core.testutil.PostgreSQL
+#
+#          - target: SQLServer
+#            container: sqlserver
+#            maven-args: --activate-profiles sql,jpa,travis -DincludedGroups=com.querydsl.core.testutil.SQLServer
+#
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Download workspace
+#        uses: actions/download-artifact@v1
+#        with:
+#          name: workspace
+#
+#      - name: Decompress workspace
+#        run: tar zxf workspace/workspace.tar.gz -C .
+#
+#      - name: Start test databases
+#        if: ${{ matrix.container }}
+#        shell: bash
+#        working-directory: travis
+#        timeout-minutes: 5
+#        run: |
+#          docker-compose up --detach ${{ matrix.container }}
+#          docker ps
+#          while true; do
+#             status=$(docker inspect --format='{{json .State.Health.Status}}' "$(docker ps -aqf "name=${{ matrix.container }}")")
+#             if [[ $status == '"healthy"' ]]; then
+#               break
+#             fi
+#             sleep 1
+#          done
+#
+#      - name: Run tests
+#        run: mvn --batch-mode verify -am jacoco:report ${{ matrix.maven-args }}
+#
+#      - name: Report coverage
+#        if: ${{ github.event_name == 'push' && github.ref == 'parameterize-build' }}
+#        env:
+#          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+#        run: mvn --batch-mode coveralls:report
 
   deploy:
     needs: test
@@ -152,8 +157,18 @@ jobs:
           mkdir -p ~/.m2/repository/com
           tar zxf artifacts/artifacts.tar.gz -C ~/.m2/repository/com
 
+      - name: Download artifacts
+        uses: actions/download-artifact@v1
+        with:
+          name: artifacts
+
+      - name: Download maven-settings
+          uses: actions/download-artifact@v1
+          with:
+            name: maven-settings
+          
       - name: Deploy snapshot 🚀
         env:
           NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
           NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
-        run: mvn --batch-mode deploy --settings deploy/.m2/settings.xml -DskipTests
+        run: mvn --batch-mode deploy --settings maven-settings/.m2/settings.xml -DskipTests -DretryFailedDeploymentCount=3
