@@ -46,20 +46,11 @@ jobs:
           name: workspace
           path: /tmp/workspace.tar.gz
 
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: artifacts
-          path: /tmp/artifacts.tar.gz
-
-      - name: Clean up before caching
-        run: rm -rf ~/.m2/repository/com/querydsl/
-
   test:
     needs: build
     strategy:
       matrix:
-        target: [unit-tests, embedded, CUBRID, DB2, Derby, Firebird, MongoDB, MySQL, Oracle, PostgreSQL, SQLServer]
+        target: [unit-tests, embedded, CUBRID, DB2, Firebird, MongoDB, MySQL, Oracle, PostgreSQL, SQLServer]
         include:
           - target: unit-tests
             container: null
@@ -128,7 +119,11 @@ jobs:
           done
 
       - name: Run tests
-        run: mvn --batch-mode surefire:test -am jacoco:report ${{ matrix.maven-args }}
+        run: |
+          mvn --batch-mode \
+              --also-make \
+              surefire:test failsafe:integration-test failsafe:verify jacoco:report \
+              ${{ matrix.maven-args }}
 
       - name: Report coverage
         if: ${{ github.event_name == 'push' && github.ref == 'parameterize-build' }}
@@ -136,31 +131,21 @@ jobs:
           COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
         run: mvn --batch-mode coveralls:report
 
-#  deploy:
-#    needs: build
-#    runs-on: ubuntu-latest
-#    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/parameterize-build' }}
-#    steps:
-#      - name: Download workspace
-#        uses: actions/download-artifact@v1
-#        with:
-#          name: workspace
-#
-#      - name: Decompress workspace
-#        run: tar zxf workspace/workspace.tar.gz -C .
-#
-#      - name: Download artifacts
-#        uses: actions/download-artifact@v1
-#        with:
-#          name: artifacts
-#
-#      - name: Decompress artifacts
-#        run: |
-#          mkdir -p ~/.m2/repository/com
-#          tar zxf artifacts/artifacts.tar.gz -C ~/.m2/repository/com
-#
-#      - name: Deploy snapshot 🚀
-#        env:
-#          NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
-#          NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
-#        run: mvn --batch-mode deploy --settings deploy/.m2/settings.xml -DskipTests -DretryFailedDeploymentCount=3
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/parameterize-build' }}
+    steps:
+      - name: Download workspace
+        uses: actions/download-artifact@v1
+        with:
+          name: workspace
+
+      - name: Decompress workspace
+        run: tar zxf workspace/workspace.tar.gz -C .
+
+      - name: Deploy snapshot 🚀
+        env:
+          NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
+          NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
+        run: mvn --batch-mode deploy:deploy --settings deploy/.m2/settings.xml -DskipTests -DretryFailedDeploymentCount=3
