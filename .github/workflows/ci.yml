@@ -13,12 +13,12 @@ on:
     paths-ignore:
       - README.md
 
-env:
-  MAVEN_OPTS: -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      MAVEN_OPTS: -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
     steps:
       - name: Check out code
         uses: actions/checkout@v2
@@ -48,6 +48,8 @@ jobs:
 
   test:
     needs: build
+    env:
+      MAVEN_OPTS: -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
     strategy:
       matrix:
         target: [unit-tests, embedded, CUBRID, DB2, Firebird, MongoDB, MySQL, Oracle, PostgreSQL, SQLServer]
