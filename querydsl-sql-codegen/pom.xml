@@ -186,6 +186,8 @@
                 <value>target/derby.log</value>
             </property>
           </systemProperties>
+          <groups>${includedGroups}</groups>
+          <excludedGroups>${excludedGroups}</excludedGroups>
         </configuration>
       </plugin>         
       

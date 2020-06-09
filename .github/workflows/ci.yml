@@ -108,7 +108,7 @@ jobs:
         if: ${{ matrix.container }}
         shell: bash
         working-directory: travis
-        timeout-minutes: 5
+        timeout-minutes: 10
         run: |
           docker-compose up --detach ${{ matrix.container }}
           docker ps
@@ -150,4 +150,7 @@ jobs:
         env:
           NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
           NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
-        run: mvn --batch-mode validate jar:jar deploy:deploy --settings deploy/.m2/settings.xml -DskipTests -DretryFailedDeploymentCount=3
+        run: mvn --batch-mode jar:jar deploy:deploy --settings deploy/.m2/settings.xml -DskipTests -DretryFailedDeploymentCount=3
+
+      - name: Clean up before caching
+        run: rm -rf ~/.m2/repository/com/querydsl/

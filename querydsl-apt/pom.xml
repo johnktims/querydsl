@@ -143,6 +143,8 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
           <useSystemClassLoader>false</useSystemClassLoader>
+          <groups>${includedGroups}</groups>
+          <excludedGroups>${excludedGroups}</excludedGroups>
         </configuration>
       </plugin>  
       
