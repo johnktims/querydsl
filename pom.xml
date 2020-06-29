@@ -488,6 +488,8 @@
               <configLocation>src/main/resources/querydsl_checks_base.xml</configLocation>
               <includeTestSourceDirectory>true</includeTestSourceDirectory>
               <failOnViolation>true</failOnViolation>
+              <suppressionsLocation>src/main/resources/checkstyle-suppressions.xml</suppressionsLocation>
+              <suppressionsFileExpression>checkstyle.suppressions.file</suppressionsFileExpression>
             </configuration>
           </execution>
           <execution>
