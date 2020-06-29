@@ -9,29 +9,17 @@ import com.querydsl.sql.*;
 @Category(MySQL.class)
 public class MySQLSuiteTest extends AbstractSuite {
 
-    @Category(MySQL.class)
     public static class BeanPopulation extends BeanPopulationBase { }
-    @Category(MySQL.class)
     public static class Delete extends DeleteBase { }
-    @Category(MySQL.class)
     public static class Insert extends InsertBase { }
-    @Category(MySQL.class)
     public static class KeywordQuoting extends KeywordQuotingBase { }
-    @Category(MySQL.class)
     public static class LikeEscape extends LikeEscapeBase { }
-    @Category(MySQL.class)
     public static class Merge extends MergeBase { }
-    @Category(MySQL.class)
     public static class Select extends SelectBase { }
-    @Category(MySQL.class)
     public static class SelectMySQL extends SelectMySQLBase { }
-    @Category(MySQL.class)
     public static class Subqueries extends SubqueriesBase { }
-    @Category(MySQL.class)
     public static class Types extends TypesBase { }
-    @Category(MySQL.class)
     public static class Union extends UnionBase { }
-    @Category(MySQL.class)
     public static class Update extends UpdateBase { }
 
     @BeforeClass

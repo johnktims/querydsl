@@ -10,7 +10,6 @@ import com.querydsl.jpa.*;
 @Category(Derby.class)
 public class DerbyEclipseLinkTest extends AbstractJPASuite {
 
-    @Category(Derby.class)
     public static class JPA extends JPABase {
         @Override
         public void order_stringValue() {
@@ -29,11 +28,8 @@ public class DerbyEclipseLinkTest extends AbstractJPASuite {
             // not supported in MySQL/EclipseLink
         }
     }
-    @Category(Derby.class)
     public static class JPASQL extends JPASQLBase { }
-    @Category(Derby.class)
     public static class JPAIntegration extends JPAIntegrationBase { }
-    @Category(Derby.class)
     public static class Serialization extends SerializationBase { }
 
     @BeforeClass

@@ -12,7 +12,6 @@ import com.querydsl.sql.suites.AbstractSuite;
 @Category(MySQL.class)
 public class MySQLLiteralsSuiteTest extends AbstractSuite {
 
-    @Category(MySQL.class)
     public static class Spatial extends SpatialBase { }
 
     @BeforeClass

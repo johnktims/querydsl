@@ -12,7 +12,6 @@ import com.querydsl.sql.suites.AbstractSuite;
 @Category(Teradata.class)
 public class TeradataSuiteTest extends AbstractSuite {
 
-    @Category(Teradata.class)
     public static class Spatial extends SpatialBase { }
 
     @BeforeClass

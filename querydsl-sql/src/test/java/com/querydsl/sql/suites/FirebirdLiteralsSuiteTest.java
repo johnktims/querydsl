@@ -9,27 +9,16 @@ import com.querydsl.sql.*;
 @Category(Firebird.class)
 public class FirebirdLiteralsSuiteTest extends AbstractSuite {
 
-    @Category(Firebird.class)
     public static class BeanPopulation extends BeanPopulationBase { }
-    @Category(Firebird.class)
     public static class Delete extends DeleteBase { }
-    @Category(Firebird.class)
     public static class Insert extends InsertBase { }
-    @Category(Firebird.class)
     public static class KeywordQuoting extends KeywordQuotingBase { }
-    @Category(Firebird.class)
     public static class LikeEscape extends LikeEscapeBase { }
-    @Category(Firebird.class)
     public static class Merge extends MergeBase { }
-    @Category(Firebird.class)
     public static class Select extends SelectBase { }
-    @Category(Firebird.class)
     public static class Subqueries extends SubqueriesBase { }
-    @Category(Firebird.class)
     public static class Types extends TypesBase { }
-    @Category(Firebird.class)
     public static class Union extends UnionBase { }
-    @Category(Firebird.class)
     public static class Update extends UpdateBase { }
 
     @BeforeClass

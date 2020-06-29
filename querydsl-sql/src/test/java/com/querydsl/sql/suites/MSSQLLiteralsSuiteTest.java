@@ -9,29 +9,17 @@ import com.querydsl.sql.*;
 @Category(SQLServer.class)
 public class MSSQLLiteralsSuiteTest extends AbstractSuite {
 
-    @Category(SQLServer.class)
     public static class BeanPopulation extends BeanPopulationBase { }
-    @Category(SQLServer.class)
     public static class Delete extends DeleteBase { }
-    @Category(SQLServer.class)
     public static class Insert extends InsertBase { }
-    @Category(SQLServer.class)
     public static class KeywordQuoting extends KeywordQuotingBase { }
-    @Category(SQLServer.class)
     public static class LikeEscape extends LikeEscapeBase { }
-    @Category(SQLServer.class)
     public static class Merge extends MergeBase { }
-    @Category(SQLServer.class)
     public static class Select extends SelectBase { }
-    @Category(SQLServer.class)
     public static class SelectWindowFunctions extends SelectWindowFunctionsBase { }
-    @Category(SQLServer.class)
     public static class Subqueries extends SubqueriesBase { }
-    @Category(SQLServer.class)
     public static class Types extends TypesBase { }
-    @Category(SQLServer.class)
     public static class Union extends UnionBase { }
-    @Category(SQLServer.class)
     public static class Update extends UpdateBase { }
 
     @BeforeClass
